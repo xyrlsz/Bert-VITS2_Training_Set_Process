@@ -1,0 +1,10 @@
+# 冒号是英文冒号，冒号后面加空格
+
+# 模型名称
+model_name: "akanne"
+#语言 中日英：CJE ，中日：CJ ，中：CJ
+languages: "CJE"
+#whisper 模型大小
+whisper_size: "small"
+#whisper 是否使用GPu
+use_GPU: True

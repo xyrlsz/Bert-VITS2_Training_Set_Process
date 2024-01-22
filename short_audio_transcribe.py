@@ -4,18 +4,20 @@ import json
 import torchaudio
 import argparse
 import torch
-from config import config
+from whisper import Whisper
+
+# from config import config
 
 
 import yaml
 
 
-with open("config.yml", mode="r", encoding="utf-8") as f:
-    configyml = yaml.load(f, Loader=yaml.FullLoader)
+# with open("config.yml", mode="r", encoding="utf-8") as f:
+#     configyml = yaml.load(f, Loader=yaml.FullLoader)
 
 
-model_name = configyml["dataset_path"].replace("Data/", "")
-
+# model_name = configyml["dataset_path"].replace("Data/", "")
+_model_name = "ada"
 
 lang2token = {
     "zh": "ZH|",
@@ -24,7 +26,7 @@ lang2token = {
 }
 
 
-def transcribe_one(audio_path):
+def transcribe_one(audio_path: str, model: Whisper, use_GPU=False) -> list:
     # load audio and pad/trim it to fit 30 seconds
 
     audio = whisper.load_audio(audio_path)
@@ -38,7 +40,11 @@ def transcribe_one(audio_path):
     print(f"Detected language: {max(probs, key=probs.get)}")
     lang = max(probs, key=probs.get)
     # decode the audio
-    options = whisper.DecodingOptions(beam_size=5, fp16=False)
+    if use_GPU:
+        assert torch.cuda.is_available(), "Please enable GPU in order to run Whisper!"
+        options = whisper.DecodingOptions(beam_size=5)
+    else:
+        options = whisper.DecodingOptions(beam_size=5, fp16=False)
     result = whisper.decode(model, mel, options)
 
     # print the recognized text
@@ -46,10 +52,24 @@ def transcribe_one(audio_path):
     return lang, result.text
 
 
-if __name__ == "__main__":
+def short_audio_transcribe(
+    model_name=_model_name,
+    output_dir=f"./output/data/{_model_name}/raw/",
+    languages="CJE",
+    whisper_size="small",
+    use_GPU=False,
+):
+    # 检查目录是否存在
+    if not os.path.exists(output_dir):
+        # 如果不存在，创建目录
+        os.makedirs(output_dir)
+        print(f"目录 '{output_dir}' 已创建.")
+    else:
+        print(f"目录 '{output_dir}' 已存在.")
+
     parser = argparse.ArgumentParser()
-    parser.add_argument("--languages", default="CJE")
-    parser.add_argument("--whisper_size", default="small")
+    parser.add_argument("--languages", default=languages)
+    parser.add_argument("--whisper_size", default=whisper_size)
     args = parser.parse_args()
     if args.languages == "CJE":
         lang2token = {
@@ -66,9 +86,12 @@ if __name__ == "__main__":
         lang2token = {
             "zh": "ZH|",
         }
-    assert torch.cuda.is_available(), "Please enable GPU in order to run Whisper!"
-    model = whisper.load_model(args.whisper_size)
-    parent_dir = "./Data/ada/raw/"
+    if use_GPU:
+        assert torch.cuda.is_available(), "Please enable GPU in order to run Whisper!"
+        model = whisper.load_model(args.whisper_size)
+    else:
+        model = whisper.load_model(args.whisper_size, device="cpu")
+    parent_dir = output_dir
     # parent_dir=config.resample_config.in_dir
     # parent_dir = parent_dir.replace("/audios","")
     print(parent_dir)
@@ -77,9 +100,9 @@ if __name__ == "__main__":
     total_files = sum([len(files) for r, d, files in os.walk(parent_dir)])
     # resample audios
     # 2023/4/21: Get the target sampling rate
-    with open(config.train_ms_config.config_path, "r", encoding="utf-8") as f:
-        hps = json.load(f)
-    target_sr = hps["data"]["sampling_rate"]
+    # with open(config.train_ms_config.config_path, "r", encoding="utf-8") as f:
+    #     hps = json.load(f)
+    # target_sr = hps["data"]["sampling_rate"]
     processed_files = 0
 
     for i, wavfile in enumerate(list(os.walk(parent_dir))[0][2]):
@@ -97,18 +120,12 @@ if __name__ == "__main__":
             # save_path = parent_dir+"/"+ speaker + "/" + f"ada_{i}.wav"
             # torchaudio.save(save_path, wav, target_sr, channels_first=True)
             # transcribe text
-            lang, text = transcribe_one(f"./Data/{speaker}/raw/{wavfile}")
+            lang, text = transcribe_one(f"{output_dir}/{wavfile}", model, use_GPU)
             if lang not in list(lang2token.keys()):
                 print(f"{lang} not supported, ignoring\n")
                 continue
             # text = "ZH|" + text + "\n"
-            text = (
-                f"./Data/{model_name}/wavs/{wavfile}|"
-                + f"{model_name}|"
-                + lang2token[lang]
-                + text
-                + "\n"
-            )
+            text = f"{wavfile}|" + f"{model_name}|" + lang2token[lang] + text + "\n"
             speaker_annos.append(text)
 
             processed_files += 1
@@ -134,8 +151,11 @@ if __name__ == "__main__":
         print(
             "this IS NOT expected if you have uploaded a zip file of short audios. Please check your file structure or make sure your audio language is supported."
         )
-    with open(
-        config.preprocess_text_config.transcription_path, "w", encoding="utf-8"
-    ) as f:
+    list_dir = output_dir.replace("raw/", "")
+    with open(list_dir + "esd.list", "w", encoding="utf-8") as f:
         for line in speaker_annos:
             f.write(line)
+
+
+if __name__ == "__main__":
+    short_audio_transcribe()

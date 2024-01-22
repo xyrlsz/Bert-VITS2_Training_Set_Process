@@ -179,7 +179,12 @@ extract_list.py
 
 logs/
 
-Data/ada/raw/*
-Data/ada/esd.list
+output/data/*
+
 input/*
 /__pycache__/
+config/config.yaml
+converter/Audio2WAV/input/*
+converter/Audio2WAV/output/*
+converter/Video2WAV/input/*
+converter/Video2WAV/output/*
