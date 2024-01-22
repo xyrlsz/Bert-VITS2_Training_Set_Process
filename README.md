@@ -5,11 +5,17 @@
 这个是处理Bert-VITS2训练集的代码。
 参考了这个仓库：https://github.com/v3ucn/Bert-vits2-V2.3
 
+需要使用纯人声的wav文件，需要自己处理背景音乐。
+
+音频格式转换工具：[点我跳转](./converter_doc.md)
+
 ## 使用方法
 
-理论上Windows和Linu上都能运行。**需要安装python，ffmpeg，whisper，pytorch，cuda（pytorch是什么Compute Platform就装什么，只用cpu的话可以不用装）。** 请自行百度。
+理论上Windows和Linu上都能运行。
 
-有CPU和GPU两种模式,用GPU跑的话建议用WSL或者Linux，Windows可能会有点问题，自己试试吧。
+**需要安装python，ffmpeg，whisper，pytorch，cuda（pytorch是什么Compute Platform就装什么，只用cpu的话可以不用装）。** 请自行百度。
+
+有CPU和GPU两种模式，用GPU跑的话建议用WSL或者Linux，Windows可能会有点问题，自己试试吧。
 
 **whisper Model 选择参考**:
 
