@@ -54,6 +54,10 @@ pip install -r requirements.txt
 
 如果报错了可能是网络问题，可以尝试开魔法。
 
+### 修改配置文件
+
+把config目录下的配置文件config_example.yaml 复制一份并重命名为.yaml，并修改相关配置
+
 ### 开始使用
 
 #### 1. 将待处理文件放入input文件夹下
