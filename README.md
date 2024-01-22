@@ -46,3 +46,14 @@ pip install -r requirements.txt
 ```
 
 如果报错了可能是网络问题，可以尝试开魔法。
+
+### 开始使用
+
+#### 1. 将待处理文件放入input文件夹下
+
+#### 2. 运行
+```shell
+python app.py
+```
+
+#### 3. 处理后的文件在output文件夹下
