@@ -42,6 +42,7 @@ short_audio_transcribe(
     languages=configyl["languages"],
     whisper_size=configyl["whisper_size"],
     use_GPU=configyl["use_GPU"],
+    is_simplified=configyl["is_simplified"],
 )
 
 print("标签文本生成完成")

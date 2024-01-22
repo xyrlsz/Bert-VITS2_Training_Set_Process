@@ -8,4 +8,5 @@ Requests==2.31.0
 soundfile==0.12.1
 torch
 torchaudio
+opencc-python-reimplemented
 git+https://github.com/openai/whisper.git

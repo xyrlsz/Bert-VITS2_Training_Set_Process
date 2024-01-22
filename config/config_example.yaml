@@ -2,9 +2,11 @@
 
 # 模型名称
 model_name: "akanne"
-#语言 中日英：CJE ，中日：CJ ，中：CJ
+# 语言 中日英：CJE ，中日：CJ ，中：CJ
 languages: "CJE"
-#whisper 模型大小
+# whisper 模型大小
 whisper_size: "small"
-#whisper 是否使用GPu
+# whisper 是否使用GPU
 use_GPU: True
+# whisper 中文输出为简体中文，否则为繁体中文
+is_simplified: True

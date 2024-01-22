@@ -5,6 +5,7 @@ import torchaudio
 import argparse
 import torch
 from whisper import Whisper
+from opencc import OpenCC
 
 # from config import config
 
@@ -26,7 +27,32 @@ lang2token = {
 }
 
 
-def transcribe_one(audio_path: str, model: Whisper, use_GPU=False) -> list:
+def T2S(traditional_text):
+    # 创建OpenCC对象，选择s2twp（繁体中文到台湾繁体中文）转换模式
+    cc = OpenCC("t2s")
+
+    # 调用convert方法进行转换
+    simplified_text = cc.convert(traditional_text)
+
+    return simplified_text
+
+
+def S2T(traditional_text):
+    # 创建OpenCC对象，选择s2twp（繁体中文到台湾繁体中文）转换模式
+    cc = OpenCC("s2t")
+
+    # 调用convert方法进行转换
+    simplified_text = cc.convert(traditional_text)
+
+    return simplified_text
+
+
+def transcribe_one(
+    audio_path: str,
+    model: Whisper,
+    use_GPU=False,
+    is_simplified=True,
+) -> list:
     # load audio and pad/trim it to fit 30 seconds
 
     audio = whisper.load_audio(audio_path)
@@ -48,8 +74,15 @@ def transcribe_one(audio_path: str, model: Whisper, use_GPU=False) -> list:
     result = whisper.decode(model, mel, options)
 
     # print the recognized text
-    print(result.text)
-    return lang, result.text
+    text = result.text
+    if lang == "zh":
+        if is_simplified:
+            text = T2S(text)
+        else:
+            text = S2T(text)
+
+    print(text)
+    return lang, text
 
 
 def short_audio_transcribe(
@@ -58,6 +91,7 @@ def short_audio_transcribe(
     languages="CJE",
     whisper_size="small",
     use_GPU=False,
+    is_simplified=True,
 ):
     # 检查目录是否存在
     if not os.path.exists(output_dir):
@@ -70,6 +104,10 @@ def short_audio_transcribe(
     parser = argparse.ArgumentParser()
     parser.add_argument("--languages", default=languages)
     parser.add_argument("--whisper_size", default=whisper_size)
+    # if is_simplified:
+    #     parser.add_argument("--initial_prompt", default="观马说话运输时间卸货")
+    # else:
+    #     parser.add_argument("--initial_prompt", default="觀馬說話運輸時間卸貨")
     args = parser.parse_args()
     if args.languages == "CJE":
         lang2token = {
@@ -120,11 +158,14 @@ def short_audio_transcribe(
             # save_path = parent_dir+"/"+ speaker + "/" + f"ada_{i}.wav"
             # torchaudio.save(save_path, wav, target_sr, channels_first=True)
             # transcribe text
-            lang, text = transcribe_one(f"{output_dir}/{wavfile}", model, use_GPU)
+            lang, text = transcribe_one(
+                f"{output_dir}/{wavfile}", model, use_GPU, is_simplified
+            )
             if lang not in list(lang2token.keys()):
                 print(f"{lang} not supported, ignoring\n")
                 continue
             # text = "ZH|" + text + "\n"
+
             text = f"{wavfile}|" + f"{model_name}|" + lang2token[lang] + text + "\n"
             speaker_annos.append(text)
 
