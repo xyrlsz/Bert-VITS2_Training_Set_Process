@@ -6,7 +6,7 @@ def get_file_list(directory_path: str = "input") -> list:
     file_list = []
     for filename in os.listdir(directory_path):
         filepath = os.path.join(directory_path, filename)
-        if os.path.isfile(filepath):
+        if os.path.isfile(filepath) and (filename != ".gitkeep"):
             file_list.append(filename)
     return file_list
 
