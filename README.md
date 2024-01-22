@@ -9,6 +9,13 @@
 
 音频格式转换工具：[点我跳转](./converter_doc.md)
 
+在线格式转换器：[点我跳转](https://convertfree.com/)(支持多种格式转换，免费，视频转音频也可以)
+
+人声和音乐分离：
+
+可以使用UVR来提取人声，[教程](https://www.bilibili.com/read/cv27499700/)
+
+
 ## 使用方法
 
 理论上Windows和Linu上都能运行。
