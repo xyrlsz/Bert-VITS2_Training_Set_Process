@@ -1,4 +1,7 @@
+
+
 # Bert-VITS2_Training_Set_Processing
+<img src="https://img.shields.io/badge/python->=3.9-green">
 
 ## 简介
 
