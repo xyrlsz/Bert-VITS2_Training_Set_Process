@@ -1,23 +1,11 @@
 import whisper
 import os
-import json
-import torchaudio
 import argparse
 import torch
 from whisper import Whisper
 from opencc import OpenCC
 
-# from config import config
 
-
-import yaml
-
-
-# with open("config.yml", mode="r", encoding="utf-8") as f:
-#     configyml = yaml.load(f, Loader=yaml.FullLoader)
-
-
-# model_name = configyml["dataset_path"].replace("Data/", "")
 _model_name = "ada"
 
 lang2token = {

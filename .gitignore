@@ -188,3 +188,4 @@ converter/Audio2WAV/input/*
 converter/Audio2WAV/output/*
 converter/Video2WAV/input/*
 converter/Video2WAV/output/*
+.conda/

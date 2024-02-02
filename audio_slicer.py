@@ -1,27 +1,11 @@
 import librosa  # Optional. Use any library you like to read audio files.
 import soundfile  # Optional. Use any library you like to write audio files.
 
-import shutil
-import gradio as gr
-import os
-import webbrowser
-import subprocess
-import datetime
-import json
-import requests
-import soundfile as sf
-import numpy as np
-import yaml
-
-# from config import config
 import os
 
 
-# with open("config.yml", mode="r", encoding="utf-8") as f:
-#     configyml = yaml.load(f, Loader=yaml.FullLoader)
+import os
 
-
-# model_name = configyml["dataset_path"].replace("Data/", "")
 
 model_name = "ada"
 from slicer2 import Slicer

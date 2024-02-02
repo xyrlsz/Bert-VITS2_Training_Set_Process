@@ -1,11 +1,10 @@
-gradio
 librosa
 numpy
+opencc_python_reimplemented
 pydub
 PyYAML
-Requests
-soundfile
+soundfile 
 torch
+torchvision 
 torchaudio
-opencc-python-reimplemented
 git+https://github.com/openai/whisper.git

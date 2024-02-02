@@ -10,7 +10,9 @@
 
 需要使用纯人声的wav文件，需要自己处理背景音乐。
 
-音频格式转换工具：[点我跳转](./converter_doc.md)
+音频格式转换工具：[点我跳转](./converter_doc.md#音频转换器)
+
+视频转WAV工具：[点我跳转](./converter_doc.md#视频转音频)
 
 在线格式转换器：[点我跳转](https://convertfree.com/)(支持多种格式转换，免费，视频转音频也可以)
 
@@ -46,7 +48,7 @@ git clone https://github.com/xyrlsz/Bert-VITS2_Training_Set_Processing.git
 ```
 ### 安装依赖
 pip清华换源：（可选）
-~~~
+~~~shell
 pip config set global.index-url https://pypi.tuna.tsinghua.edu.cn/simple
 ~~~
 安装依赖：
